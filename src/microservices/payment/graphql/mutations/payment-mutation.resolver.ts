@@ -21,7 +21,7 @@ export class PaymentMutationResolver {
   @UseGuards(GqlJwtAuthGuard)
   @Mutation((returns) => GqlPayment)
   async updatePayment(
-    @Args('id') id: number,
+    @Args('id') id: string,
     @Args('updatePaymentData') updatePaymentInput: CreatePaymentInput,
   ): Promise<GqlPayment> {
     return this.paymentService.updatePayment(id, updatePaymentInput);

@@ -15,7 +15,7 @@ export class PaymentService {
     private readonly clientService: ClientService,
   ) {}
 
-  async getPaymentById(id: number): Promise<RestPayment | GqlPayment> {
+  async getPaymentById(id: string): Promise<RestPayment | GqlPayment> {
     return this.clientService.sendMessageWithPayload(
       this.paymentClient,
       { role: 'payment', cmd: 'get' },
@@ -44,7 +44,7 @@ export class PaymentService {
   }
 
   async updatePayment(
-    id: number,
+    id: string,
     updatedPayment: CreatePaymentDto | CreatePaymentInput,
   ): Promise<RestPayment | GqlPayment> {
     return this.clientService.sendMessageWithPayload(

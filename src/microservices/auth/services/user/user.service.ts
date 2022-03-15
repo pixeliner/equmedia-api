@@ -46,7 +46,7 @@ export class UserService {
     );
   }
 
-  async getUserById(id: number) {
+  async getUserById(id: string) {
     return this.clientService.sendMessageWithPayload(
       this.authClient,
       { role: 'user', cmd: 'getUserById' },
@@ -75,7 +75,7 @@ export class UserService {
   }
 
   async changeUserPassword(
-    id: number,
+    id: string,
     changePasswordData: ChangePasswordDto | ChangePasswordInput,
   ): Promise<GqlAuthChangeResponse | RestAuthChangeResponse> {
     if (changePasswordData.old_password === changePasswordData.new_password)
@@ -90,7 +90,7 @@ export class UserService {
   }
 
   async deleteUserAccount(
-    id: number,
+    id: string,
   ): Promise<GqlAuthChangeResponse | RestAuthChangeResponse> {
     return this.clientService.sendMessageWithPayload(
       this.authClient,
@@ -107,7 +107,7 @@ export class UserService {
     );
   }
 
-  async removeRefreshToken(userId: number): Promise<boolean> {
+  async removeRefreshToken(userId: string): Promise<boolean> {
     return this.clientService.sendMessageWithPayload(
       this.authClient,
       { role: 'user', cmd: 'removeRefreshToken' },

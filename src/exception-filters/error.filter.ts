@@ -14,9 +14,9 @@ import { validateServerError } from './helpers';
 @Catch()
 export class ErrorFilter implements ExceptionFilter {
   catch(error, host: ArgumentsHost) {
-    let request = host.switchToHttp().getRequest();
-    let response = host.switchToHttp().getResponse();
-    let status =
+    const request = host.switchToHttp().getRequest();
+    const response = host.switchToHttp().getResponse();
+    const status =
       error instanceof HttpException
         ? error.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;

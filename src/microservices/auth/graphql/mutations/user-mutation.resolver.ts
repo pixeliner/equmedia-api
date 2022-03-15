@@ -17,7 +17,7 @@ export class UserMutationResolver {
   @UseGuards(AccessControlGuard)
   @Mutation((returns) => GqlAuthChangeResponse)
   async changeUserPassword(
-    @Args('id') id: number,
+    @Args('id') id: string,
     @Args('changePasswordInput') changePasswordInput: ChangePasswordInput,
   ): Promise<GqlAuthChangeResponse> {
     return this.userService.changeUserPassword(id, changePasswordInput);
@@ -26,7 +26,7 @@ export class UserMutationResolver {
   @UseGuards(AccessControlGuard)
   @Mutation((returns) => GqlAuthChangeResponse)
   async deleteUserAccount(
-    @Args('id') id: number,
+    @Args('id') id: string,
   ): Promise<GqlAuthChangeResponse> {
     return this.userService.deleteUserAccount(id);
   }
