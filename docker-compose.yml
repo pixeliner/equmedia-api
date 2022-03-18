@@ -25,6 +25,8 @@ services:
       - REDIS_REPLICATION_MODE=master
     ports: 
       - ${REDIS_PORT}:6379
+    env_file: 
+      - .env
     networks: 
       - equmedia-api-network
 

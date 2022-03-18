@@ -28,7 +28,7 @@ export class AuthService {
       );
 
     this.mailService.sendConfirmCreateAccountEmail({
-      customer_email: authCredentialsData.email,
+      user_email: authCredentialsData.email,
       token: (await authUser).token,
     });
 

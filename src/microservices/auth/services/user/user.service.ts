@@ -126,7 +126,7 @@ export class UserService {
       );
 
     const response = this.mailService.sendForgotPasswordEmail({
-      customer_email: authEmailData.email,
+      user_email: authEmailData.email,
       token: await forgotPasswordToken,
     });
 
@@ -147,7 +147,7 @@ export class UserService {
     );
 
     const response = this.mailService.sendSetNewPasswordEmail({
-      customer_email: await user_email,
+      user_email: await user_email,
     });
 
     return response;

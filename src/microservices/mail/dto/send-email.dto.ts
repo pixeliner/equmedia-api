@@ -1,4 +1,4 @@
 export class SendEmailDto {
-  customer_email: string;
+  user_email: string;
   token?: string;
 }
