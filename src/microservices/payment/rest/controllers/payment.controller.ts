@@ -8,7 +8,6 @@ import {
   Body,
   UsePipes,
   ValidationPipe,
-  ParseIntPipe,
 } from '@nestjs/common';
 
 import { AccessControlGuard } from '@auth/guards';
@@ -22,9 +21,7 @@ export class PaymentController {
 
   @UseGuards(AccessControlGuard)
   @Get('/:id')
-  async getPaymentById(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<RestPayment> {
+  async getPaymentById(@Param('id') id: string): Promise<RestPayment> {
     return this.paymentService.getPaymentById(id);
   }
 
@@ -41,7 +38,7 @@ export class PaymentController {
   @UseGuards(AccessControlGuard)
   @Put('/:id')
   async updatePayment(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body() updatedPayment: CreatePaymentDto,
   ): Promise<RestPayment> {
     return this.paymentService.updatePayment(id, updatedPayment);

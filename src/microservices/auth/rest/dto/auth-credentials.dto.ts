@@ -8,7 +8,7 @@ import {
 
 export class AuthCredentialsDto {
   @MinLength(8)
-  @MaxLength(20)
+  @MaxLength(50)
   @IsEmail()
   email: string;
 

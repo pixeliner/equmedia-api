@@ -12,9 +12,11 @@
     "baseUrl": "./",
     "incremental": true,
     "moduleResolution": "node",
+    "skipLibCheck": true,
     "paths": {
       "@infrastructure/*": ["src/item/infrastructure/*"],
       "@auth/*": ["src/microservices/auth/*"],
+      "@customer/*": ["src/microservices/customer/*"],
       "@mail/*": ["src/microservices/mail/*"],
       "@utils/*": ["src/utils/*"],
       "@test/*": ["test/*"],

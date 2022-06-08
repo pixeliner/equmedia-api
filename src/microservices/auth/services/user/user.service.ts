@@ -7,25 +7,15 @@ import {
   RestAuthUserId,
 } from '../../rest/models';
 import {
-  GqlAuthChangeResponse,
-  GqlAuthUser,
-  GqlAuthUserId,
-} from '../../graphql/models';
-import {
   AuthCredentialsDto,
   AuthEmailDto,
   ChangePasswordDto,
   SetNewPasswordDto,
   GetRefreshUserDto,
 } from '../../rest/dto';
-import {
-  AuthCredentialsInput,
-  AuthEmailInput,
-  ChangePasswordInput,
-  SetNewPasswordInput,
-} from '../../graphql/input';
 import { ClientService } from '@utils/client';
 import { MailService } from '@mail/services/mail.service';
+import { PaginationDto } from '@utils/pagination.dto';
 
 @Injectable()
 export class UserService {
@@ -36,9 +26,7 @@ export class UserService {
     private readonly mailService: MailService,
   ) {}
 
-  async getUserId(
-    authEmailData: AuthEmailDto | AuthEmailInput,
-  ): Promise<GqlAuthUserId | RestAuthUserId> {
+  async getUserId(authEmailData: AuthEmailDto): Promise<RestAuthUserId> {
     return this.clientService.sendMessageWithPayload(
       this.authClient,
       { role: 'user', cmd: 'getId' },
@@ -46,7 +34,7 @@ export class UserService {
     );
   }
 
-  async getUserById(id: number) {
+  async getUserById(id: string) {
     return this.clientService.sendMessageWithPayload(
       this.authClient,
       { role: 'user', cmd: 'getUserById' },
@@ -54,9 +42,17 @@ export class UserService {
     );
   }
 
+  async getUsers(pagination: PaginationDto) {
+    return this.clientService.sendMessageWithPayload(
+      this.authClient,
+      { role: 'user', cmd: 'getUsers' },
+      pagination,
+    );
+  }
+
   async getUserIfRefreshTokenMatches(
     getRefreshUserData: GetRefreshUserDto,
-  ): Promise<GqlAuthUserId | RestAuthUserId> {
+  ): Promise<RestAuthUserId> {
     return this.clientService.sendMessageWithPayload(
       this.authClient,
       { role: 'user', cmd: 'getUserIfRefreshTokenMatches' },
@@ -65,8 +61,8 @@ export class UserService {
   }
 
   async getAuthenticatedUser(
-    authCredentialsData: AuthCredentialsDto | AuthCredentialsInput,
-  ): Promise<RestAuthUser | GqlAuthUser> {
+    authCredentialsData: AuthCredentialsDto,
+  ): Promise<RestAuthUser> {
     return this.clientService.sendMessageWithPayload(
       this.authClient,
       { role: 'user', cmd: 'getAuthenticatedUser' },
@@ -75,9 +71,9 @@ export class UserService {
   }
 
   async changeUserPassword(
-    id: number,
-    changePasswordData: ChangePasswordDto | ChangePasswordInput,
-  ): Promise<GqlAuthChangeResponse | RestAuthChangeResponse> {
+    id: string,
+    changePasswordData: ChangePasswordDto,
+  ): Promise<RestAuthChangeResponse> {
     if (changePasswordData.old_password === changePasswordData.new_password)
       throw new BadRequestException(
         'New password cannot be the same as the old password',
@@ -89,9 +85,7 @@ export class UserService {
     );
   }
 
-  async deleteUserAccount(
-    id: number,
-  ): Promise<GqlAuthChangeResponse | RestAuthChangeResponse> {
+  async deleteUserAccount(id: string): Promise<RestAuthChangeResponse> {
     return this.clientService.sendMessageWithPayload(
       this.authClient,
       { role: 'user', cmd: 'deleteAccount' },
@@ -107,7 +101,7 @@ export class UserService {
     );
   }
 
-  async removeRefreshToken(userId: number): Promise<boolean> {
+  async removeRefreshToken(userId: string): Promise<boolean> {
     return this.clientService.sendMessageWithPayload(
       this.authClient,
       { role: 'user', cmd: 'removeRefreshToken' },
@@ -116,8 +110,8 @@ export class UserService {
   }
 
   async forgotPassword(
-    authEmailData: AuthEmailDto | AuthEmailInput,
-  ): Promise<GqlAuthChangeResponse | RestAuthChangeResponse> {
+    authEmailData: AuthEmailDto,
+  ): Promise<RestAuthChangeResponse> {
     const forgotPasswordToken: Promise<string> =
       this.clientService.sendMessageWithPayload(
         this.authClient,
@@ -126,7 +120,7 @@ export class UserService {
       );
 
     const response = this.mailService.sendForgotPasswordEmail({
-      customer_email: authEmailData.email,
+      user_email: authEmailData.email,
       token: await forgotPasswordToken,
     });
 
@@ -135,8 +129,8 @@ export class UserService {
 
   async setNewPassword(
     token: string,
-    setNewPasswordData: SetNewPasswordDto | SetNewPasswordInput,
-  ): Promise<GqlAuthChangeResponse | RestAuthChangeResponse> {
+    setNewPasswordData: SetNewPasswordDto,
+  ): Promise<RestAuthChangeResponse> {
     const user_email = this.clientService.sendMessageWithPayload(
       this.authClient,
       { role: 'user', cmd: 'set-new-password' },
@@ -147,7 +141,7 @@ export class UserService {
     );
 
     const response = this.mailService.sendSetNewPasswordEmail({
-      customer_email: await user_email,
+      user_email: await user_email,
     });
 
     return response;

@@ -1,0 +1,50 @@
+version: '3.7'
+services:
+  
+  rabbitmq:
+    container_name: equmedia-api-rabbitmq
+    image: rabbitmq:3.8.8-management-alpine
+    hostname: equmedia-api-rabbitmq
+    ports:
+        - ${RABBITMQ_FIRST_HOST_PORT}:5672
+        - ${RABBITMQ_SECOND_HOST_PORT}:15672
+    volumes:
+        - ./data/rabbitmq:/var/lib/rabbitmq/mnesia/rabbit@app-rabbitmq:cached
+    env_file: 
+      - .env
+    networks: 
+      - equmedia-api-network
+
+  redis:
+    container_name: equmedia-api-redis
+    image: redis:5-alpine
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - $PWD/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    ports: 
+      - ${REDIS_PORT}:6379
+    env_file: 
+      - .env
+    networks: 
+      - equmedia-api-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx--dev
+    ports:
+        - 80:80
+        - 443:443
+    volumes:
+        - ${PWD}/nginx/dev:/etc/nginx/conf.d/
+        - ./config/public-cert.crt:/etc/ssl/public-cert.crt
+        - ./config/private-key.key:/etc/ssl/private-key.key
+    ulimits:
+      nproc: 65535
+    networks:
+      - equmedia-api-network
+
+networks:
+  equmedia-api-network:
+    driver: bridge

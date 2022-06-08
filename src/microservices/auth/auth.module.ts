@@ -6,9 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { createClientAsyncOptions } from '@utils/client';
 import { MailModule } from '@mail/mail.module';
 import { AuthServices } from './services';
-import { AuthControllers } from './rest/controllers';
-import { AuthMutations } from './graphql/mutations';
-import { AuthQueries } from './graphql/queries';
+import { AuthControllers, UsersControllers } from './rest/controllers';
 import { JwtRefreshTokenStrategy, JwtStrategy } from './strategies';
 import { SessionSerializer } from '@security/serializers';
 
@@ -19,14 +17,12 @@ import { SessionSerializer } from '@security/serializers';
     JwtModule.register({}),
     MailModule,
   ],
-  controllers: [...AuthControllers],
+  controllers: [...AuthControllers, ...UsersControllers],
   providers: [
     SessionSerializer,
     JwtStrategy,
     JwtRefreshTokenStrategy,
     ...AuthServices,
-    ...AuthMutations,
-    ...AuthQueries,
   ],
 })
 export class AuthModule {}

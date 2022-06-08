@@ -46,7 +46,7 @@ export class UserController {
   @UseGuards(AccessControlGuard)
   @Put('/:id/change-user-password')
   async changeUserPassword(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() changePasswordDto: ChangePasswordDto,
   ): Promise<RestAuthChangeResponse> {
     return this.userService.changeUserPassword(id, changePasswordDto);
@@ -55,7 +55,7 @@ export class UserController {
   @UseGuards(AccessControlGuard)
   @Delete('/:id/delete-user-account')
   async deleteUserAccount(
-    @Param('id') id: number,
+    @Param('id') id: string,
   ): Promise<RestAuthChangeResponse> {
     return this.userService.deleteUserAccount(id);
   }
