@@ -18,6 +18,8 @@ export class FrontendCookieGuard implements CanActivate {
       req = context.switchToHttp().getRequest();
     }
 
+    console.log('ACCESSING GUARD', req.cookies);
+
     if (req.cookies.frontend_cookie !== process.env.FRONTEND_COOKIE)
       throw new UnauthorizedException('You cannot access this resource');
 

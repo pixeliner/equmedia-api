@@ -26,6 +26,7 @@ export class AuthController {
   @UseGuards(RestJwtAuthGuard)
   @Get()
   authenticate(@RestCurrentUser() user: UserModel, @RestCsrfToken() csrfToken) {
+    console.log('Auth controller', user, csrfToken);
     return {
       user,
       csrfToken,
@@ -46,8 +47,11 @@ export class AuthController {
     @Req() request: IRequestWithUser,
   ): Promise<UserModel> {
     const response = await this.authService.signIn(authCredentialsDto);
+    console.log('request', request.res);
+    console.log('response', response);
 
     request.res.setHeader('Set-Cookie', [...response.cookies]);
+    console.log('request', request.res);
 
     return response.user;
   }
@@ -55,22 +59,24 @@ export class AuthController {
   @UseGuards(RestJwtAuthGuard)
   @HttpCode(200)
   @Post('/signout')
-  async signOut(@Req() req: IRequestWithUser): Promise<RestAuthChangeResponse> {
-    const signOutCookies = await this.authService.signOut(req.user.id);
+  async signOut(
+    @Req() request: IRequestWithUser,
+  ): Promise<RestAuthChangeResponse> {
+    const signOutCookies = await this.authService.signOut(request.user.id);
 
-    req.res.setHeader('Set-Cookie', [...signOutCookies]);
+    request.res.setHeader('Set-Cookie', [...signOutCookies]);
 
     return { response: 'Signed Out' };
   }
 
   @UseGuards(RestJwtRefreshGuard)
-  @Get('refresh')
-  async refresh(@Req() req: IRequestWithUser): Promise<UserModel> {
+  @Get('/refresh')
+  async refresh(@Req() request: IRequestWithUser): Promise<UserModel> {
     const accessTokenCookie =
-      await this.authService.getCookieWithJwtAccessToken(req.user.id);
+      await this.authService.getCookieWithJwtAccessToken(request.user.id);
 
-    req.res.setHeader('Set-Cookie', accessTokenCookie);
+    request.res.setHeader('Set-Cookie', accessTokenCookie);
 
-    return req.user;
+    return request.user;
   }
 }

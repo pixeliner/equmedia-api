@@ -24,6 +24,8 @@ export class ErrorFilter implements ExceptionFilter {
     let statusCode;
     let errorResponse;
 
+    console.log('ERROR', error);
+
     if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
       const { code, message } = validateServerError(error.code);
 

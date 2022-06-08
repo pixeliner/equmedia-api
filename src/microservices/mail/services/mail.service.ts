@@ -16,6 +16,7 @@ export class MailService {
   async sendConfirmCreateAccountEmail(
     sendEmailDto: SendEmailDto,
   ): Promise<SuccessResponseModel> {
+    console.log('Sending confirmation mail', sendEmailDto);
     return this.clientService.sendMessageWithPayload(
       this.mailClient,
       { role: 'mail', cmd: 'send', type: 'confirmation' },

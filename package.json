@@ -111,7 +111,6 @@
     "testEnvironment": "node",
     "moduleNameMapper": {
       "@auth/(.*)": "<rootDir>/microservices/auth/$1",
-      "@catalog/(.*)": "<rootDir>/microservices/catalog/$1",
       "@customer/(.*)": "<rootDir>/microservices/customer/$1",
       "@mail/(.*)": "<rootDir>/microservices/mail/$1",
       "@utils/(.*)": "<rootDir>/utils/$1",
@@ -122,6 +121,7 @@
   "_moduleAliases": {
     "@infrastructure": "dist/item/infrastructure",
     "@auth": "dist/microservices/auth",
+    "@customer": "dist/microservices/customer",
     "@mail": "dist/microservices/mail",
     "@utils": "dist/utils",
     "@security": "dist/security"

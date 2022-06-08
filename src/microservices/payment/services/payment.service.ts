@@ -2,8 +2,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 
 import { ClientService } from '@utils/client';
-import { CreatePaymentInput } from '../graphql/input';
-import { GqlPayment } from '../graphql/models';
 import { CreatePaymentDto } from '../rest/dto';
 import { RestPayment } from '../rest/models';
 
@@ -15,7 +13,7 @@ export class PaymentService {
     private readonly clientService: ClientService,
   ) {}
 
-  async getPaymentById(id: string): Promise<RestPayment | GqlPayment> {
+  async getPaymentById(id: string): Promise<RestPayment> {
     return this.clientService.sendMessageWithPayload(
       this.paymentClient,
       { role: 'payment', cmd: 'get' },
@@ -23,10 +21,8 @@ export class PaymentService {
     );
   }
 
-  async createPayment(
-    newPayment: CreatePaymentDto | CreatePaymentInput,
-  ): Promise<RestPayment | GqlPayment> {
-    const booking = {
+  async createPayment(newPayment: CreatePaymentDto): Promise<RestPayment> {
+    const subscription = {
       product_id: '00798231-0e77-4071-be47-31e9e247f91d',
       product_type: 'subscription',
       description: 'Equnews subscription - 30 days',
@@ -39,14 +35,14 @@ export class PaymentService {
     return this.clientService.sendMessageWithPayload(
       this.paymentClient,
       { role: 'payment', cmd: 'create' },
-      { newPayment, booking },
+      { newPayment, subscription },
     );
   }
 
   async updatePayment(
     id: string,
-    updatedPayment: CreatePaymentDto | CreatePaymentInput,
-  ): Promise<RestPayment | GqlPayment> {
+    updatedPayment: CreatePaymentDto,
+  ): Promise<RestPayment> {
     return this.clientService.sendMessageWithPayload(
       this.paymentClient,
       { role: 'payment', cmd: 'update' },

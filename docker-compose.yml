@@ -2,7 +2,7 @@ version: '3.7'
 services:
   
   rabbitmq:
-    container_name: rabbitmq
+    container_name: equmedia-api-rabbitmq
     image: rabbitmq:3.8.8-management-alpine
     hostname: equmedia-api-rabbitmq
     ports:
@@ -16,7 +16,7 @@ services:
       - equmedia-api-network
 
   redis:
-    container_name: redis
+    container_name: equmedia-api-redis
     image: redis:5-alpine
     command: redis-server --requirepass ${REDIS_PASSWORD}
     volumes:
